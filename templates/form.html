@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Report Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <form id="reportForm" action="/submit" method="POST" enctype="multipart/form-data">
+            <!-- Project Details Card -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Project Details</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Project, Sprint, and PM Name Selection -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label">Project</label>
+                                <div class="d-flex">
+                                    <select class="form-select" name="project_select" id="projectSelect">
+                                        <option value="">Select Project</option>
+                                        <option value="project1">Project 1</option>
+                                        <option value="project2">Project 2</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <input type="text" class="form-control ms-2" name="project_input" id="projectInput"
+                                        placeholder="Enter Project Name" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Sprint</label>
+                                <input type="text" class="form-control" name="sprint" placeholder="Enter Sprint"
+                                    required>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">PM Name</label>
+                                <input type="text" class="form-control" name="pm_name" placeholder="Enter PM Name"
+                                    required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Planned Date Range -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label">Planned Start Date</label>
+                                <input type="date" class="form-control" name="start_date" required>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Planned End Date</label>
+                                <input type="date" class="form-control" name="end_date" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actual Date Range -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label class="form-label">Actual Start Date</label>
+                                <input type="date" class="form-control" name="actual_start_date" required>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Actual End Date</label>
+                                <input type="date" class="form-control" name="actual_end_date" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Review and Sonar Qube Row -->
+            <div class="row mb-3">
+                <!-- Code Review Card -->
+                <div class="col-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">Code Review</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="code_review" value="pass"
+                                        id="codeReviewPass" required>
+                                    <label class="form-check-label">Pass</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="code_review" value="fail"
+                                        id="codeReviewFail">
+                                    <label class="form-check-label">Fail</label>
+                                </div>
+                            </div>
+                            <div id="approverNameDiv" style="display: none;">
+                                <label class="form-label">Approver Name</label>
+                                <input type="text" class="form-control" name="approver_name" id="approverName"
+                                    placeholder="Enter PM/Approver Name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sonar Qube Card -->
+                <div class="col-6">
+                    <div class="card h-100">
+                        <div class="card-header">
+                            <h5 class="mb-0">Sonar Qube Report</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="sonar_result" value="pass"
+                                        id="sonarPass" required>
+                                    <label class="form-check-label">Pass</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="sonar_result" value="fail"
+                                        id="sonarFail">
+                                    <label class="form-check-label">Fail</label>
+                                </div>
+                            </div>
+                            <div id="sonarFileDiv" style="display: none;">
+                                <label class="form-label">Upload Sonar Report</label>
+                                <input type="file" class="form-control" name="sonar_file" id="sonarFile">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VAPT Report Card -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">VAPT Report</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="vapt_result" value="pass"
+                                        id="vaptPass" required>
+                                    <label class="form-check-label">Pass</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" class="form-check-input" name="vapt_result" value="fail"
+                                        id="vaptFail">
+                                    <label class="form-check-label">Fail</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div id="vaptFileDiv">
+                                <label class="form-label">Upload VAPT Report</label>
+                                <input type="file" class="form-control" name="vapt_report" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QA Report Card (renamed from Testing Report) -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">QA Report</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Test Details -->
+                    <div class="mb-3">
+                        <h5>Test Details</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Total Test Cases</label>
+                                <input type="number" class="form-control" name="total_tests" id="totalTests" required>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Test Cases Executed</label>
+                                <input type="number" class="form-control" name="executed_tests" id="executedTests"
+                                    required>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Test Cases Passed</label>
+                                <input type="number" class="form-control" name="passed_tests" id="passedTests" required>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Test Cases Failed</label>
+                                <input type="number" class="form-control" name="failed_tests" id="failedTests" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conditional Approval -->
+                    <div class="mb-3">
+                        <h5>Approval Type</h5>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="approval_type" value="conditional"
+                                id="conditionalApproval" required>
+                            <label class="form-check-label">Conditional Approval</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="approval_type" value="non_conditional"
+                                id="nonConditionalApproval">
+                            <label class="form-check-label">Non-Conditional Approval</label>
+                        </div>
+
+                        <!-- Severity Issues (shown only for conditional approval) -->
+                        <div id="severityIssuesDiv" style="display: none;" class="mt-3">
+                            <div class="row">
+                                <div class="col-3">
+                                    <label class="form-label text-secondary small">S0</label>
+                                    <input type="number" class="form-control severity-input" name="s0" value="0"
+                                        min="0">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label text-secondary small">S1</label>
+                                    <input type="number" class="form-control severity-input" name="s1" value="0"
+                                        min="0">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label text-secondary small">S2</label>
+                                    <input type="number" class="form-control severity-input" name="s2" value="0"
+                                        min="0">
+                                </div>
+                                <div class="col-3">
+                                    <label class="form-label text-secondary small">S3</label>
+                                    <input type="number" class="form-control severity-input" name="s3" value="0"
+                                        min="0">
+                                </div>
+                            </div>
+                            <div class="mt-2 text-danger small" id="severityError" style="display: none;">
+                                Sum of severity issues must equal the number of failed test cases
+                            </div>
+                        </div>
+
+                        <!-- QA Sign-off -->
+                        <div class="mt-3">
+                            <h6>QA Sign-off</h6>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="qa_signoff" value="yes"
+                                    id="qaSignoffYes" required>
+                                <label class="form-check-label">Yes</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="qa_signoff" value="no"
+                                    id="qaSignoffNo">
+                                <label class="form-check-label">No</label>
+                            </div>
+                            <div id="qaApproverDiv" style="display: none;" class="mt-2">
+                                <label class="form-label">QA Resource Name</label>
+                                <input type="text" class="form-control" name="qa_approver" id="qaApprover"
+                                    placeholder="Enter QA Resource Name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Repository Details Card -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">Code Repository Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">Final PR URL</label>
+                            <input type="url" class="form-control" name="pr_url" placeholder="Enter PR URL" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Final Commit</label>
+                            <input type="text" class="form-control" name="final_commit"
+                                placeholder="Enter Final Commit Hash" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CCR/CDR Ticket Details Card -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="mb-0">CCR/CDR Ticket Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label class="form-label">Redmine URL</label>
+                            <input type="url" class="form-control" name="redmine_url"
+                                placeholder="Enter Redmine Ticket URL" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">Sign-off Type</label>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="signoff_type" value="client"
+                                    id="clientSignoff" required>
+                                <label class="form-check-label">Client Sign-off</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="signoff_type" value="manager"
+                                    id="managerSignoff">
+                                <label class="form-check-label">Manager Sign-off</label>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div id="clientNameDiv" style="display: none;">
+                                <label class="form-label">Client Name</label>
+                                <input type="text" class="form-control" name="client_name" id="clientName"
+                                    placeholder="Enter Client Name">
+                            </div>
+                            <div id="managerNameDiv" style="display: none;">
+                                <label class="form-label">Manager Name</label>
+                                <input type="text" class="form-control" name="manager_name" id="managerName" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit and Generate Report Buttons -->
+            <div class="row mb-4">
+                <div class="col-12 d-flex justify-content-center gap-4">
+                    <button type="submit" class="btn btn-primary" style="width: 150px;">Submit</button>
+                    <button type="submit" formaction="/generate_pdf" class="btn btn-success"
+                        style="width: 150px;">Generate Report</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Project Selection Logic
+        document.getElementById('projectSelect').addEventListener('change', function () {
+            const projectInput = document.getElementById('projectInput');
+            projectInput.style.display = this.value === 'other' ? 'block' : 'none';
+            projectInput.required = this.value === 'other';
+        });
+
+        // Test Cases Validation
+        const testInputs = ['totalTests', 'executedTests', 'passedTests', 'failedTests'];
+        testInputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', validateTestCases);
+        });
+
+        function validateTestCases() {
+            const total = parseInt(document.getElementById('totalTests').value) || 0;
+            const executed = parseInt(document.getElementById('executedTests').value) || 0;
+            const passed = parseInt(document.getElementById('passedTests').value) || 0;
+            const failed = parseInt(document.getElementById('failedTests').value) || 0;
+
+            const inputs = [
+                document.getElementById('executedTests'),
+                document.getElementById('passedTests'),
+                document.getElementById('failedTests')
+            ];
+
+            inputs.forEach(input => {
+                if (parseInt(input.value) > total) {
+                    input.classList.add('is-invalid');
+                    input.setCustomValidity('Value cannot be greater than total test cases');
+                } else {
+                    input.classList.remove('is-invalid');
+                    input.setCustomValidity('');
+                }
+            });
+
+            if (passed + failed !== executed) {
+                document.getElementById('passedTests').classList.add('is-invalid');
+                document.getElementById('failedTests').classList.add('is-invalid');
+                document.getElementById('passedTests').setCustomValidity('Sum of passed and failed tests must equal executed tests');
+                document.getElementById('failedTests').setCustomValidity('Sum of passed and failed tests must equal executed tests');
+            }
+        }
+
+        // Code Review Approval Name
+        document.querySelectorAll('input[name="code_review"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                document.getElementById('approverNameDiv').style.display =
+                    this.value === 'pass' ? 'block' : 'none';
+                document.getElementById('approverName').required = this.value === 'pass';
+            });
+        });
+
+        // Sonar Qube File Upload
+        document.querySelectorAll('input[name="sonar_result"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                document.getElementById('sonarFileDiv').style.display =
+                    this.value === 'pass' ? 'block' : 'none';
+                document.getElementById('sonarFile').required = this.value === 'pass';
+            });
+        });
+
+        // QA Sign-off Approver Name
+        document.querySelectorAll('input[name="qa_signoff"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                const qaApproverDiv = document.getElementById('qaApproverDiv');
+                qaApproverDiv.style.display = this.value === 'yes' ? 'block' : 'none';
+                document.getElementById('qaApprover').required = this.value === 'yes';
+            });
+        });
+
+        // Severity Issues for Conditional Approval
+        document.querySelectorAll('input[name="approval_type"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                const severityDiv = document.getElementById('severityIssuesDiv');
+                severityDiv.style.display = this.value === 'conditional' ? 'block' : 'none';
+
+                // Handle required fields
+                document.querySelectorAll('.severity-input').forEach(input => {
+                    input.required = this.value === 'conditional';
+                });
+
+                if (this.value === 'conditional') {
+                    validateSeveritySum();
+                }
+            });
+        });
+
+        // Severity Sum Validation
+        function validateSeveritySum() {
+            const failedTests = parseInt(document.getElementById('failedTests').value) || 0;
+            const s0 = parseInt(document.querySelector('input[name="s0"]').value) || 0;
+            const s1 = parseInt(document.querySelector('input[name="s1"]').value) || 0;
+            const s2 = parseInt(document.querySelector('input[name="s2"]').value) || 0;
+            const s3 = parseInt(document.querySelector('input[name="s3"]').value) || 0;
+
+            const severitySum = s0 + s1 + s2 + s3;
+            const severityInputs = document.querySelectorAll('.severity-input');
+            const errorDiv = document.getElementById('severityError');
+
+            if (severitySum !== failedTests) {
+                severityInputs.forEach(input => {
+                    input.classList.add('is-invalid');
+                    input.setCustomValidity('Sum of severity issues must equal failed test cases');
+                });
+                errorDiv.style.display = 'block';
+            } else {
+                severityInputs.forEach(input => {
+                    input.classList.remove('is-invalid');
+                    input.setCustomValidity('');
+                });
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        // Add validation on severity input change
+        document.querySelectorAll('.severity-input').forEach(input => {
+            input.addEventListener('input', validateSeveritySum);
+        });
+
+        // Sign-off Type Handling
+        document.querySelectorAll('input[name="signoff_type"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                const clientNameDiv = document.getElementById('clientNameDiv');
+                const managerNameDiv = document.getElementById('managerNameDiv');
+                const clientName = document.getElementById('clientName');
+                const managerName = document.getElementById('managerName');
+
+                if (this.value === 'client') {
+                    clientNameDiv.style.display = 'block';
+                    managerNameDiv.style.display = 'none';
+                    clientName.required = true;
+                    managerName.required = false;
+                } else {
+                    clientNameDiv.style.display = 'none';
+                    managerNameDiv.style.display = 'block';
+                    clientName.required = false;
+                    managerName.required = true;
+                    // Auto-populate manager name from PM Name
+                    managerName.value = document.querySelector('input[name="pm_name"]').value;
+                }
+            });
+        });
+
+        // Update manager name when PM name changes
+        document.querySelector('input[name="pm_name"]').addEventListener('input', function () {
+            const managerName = document.getElementById('managerName');
+            if (document.getElementById('managerSignoff').checked) {
+                managerName.value = this.value;
+            }
+        });
+    </script>
+</body>
+
+</html>

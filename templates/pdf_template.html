@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .header {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">Project Report</div>
+
+        <div class="section">
+            <div class="label">Project Details:</div>
+            <div>Project: {{ data.project_select if data.project_select != 'other' else data.project_input }}</div>
+            <div>Sprint: {{ data.sprint }}</div>
+            <div>PM Name: {{ data.pm_name }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Date Range:</div>
+            <div>Planned: {{ data.start_date }} to {{ data.end_date }}</div>
+            <div>Actual: {{ data.actual_start_date }} to {{ data.actual_end_date }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Sonar Qube Result:</div>
+            <div>{{ data.sonar_result.upper() }}</div>
+            {% if data.sonar_result == 'pass' %}
+            <div>Report: {{ data.get('sonar_filename', 'No file uploaded') }}</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <div class="label">VAPT Report:</div>
+            <div>Status: {{ data.vapt_result.upper() }}</div>
+            <div>Report: {{ data.get('vapt_filename', 'No file uploaded') }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">Test Results:</div>
+            <table>
+                <tr>
+                    <th>Total Tests</th>
+                    <th>Executed</th>
+                    <th>Passed</th>
+                    <th>Failed</th>
+                </tr>
+                <tr>
+                    <td>{{ data.total_tests }}</td>
+                    <td>{{ data.executed_tests }}</td>
+                    <td>{{ data.passed_tests }}</td>
+                    <td>{{ data.failed_tests }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="label">Approval Type:</div>
+            <div>{{ data.approval_type.replace('_', ' ').title() }}</div>
+            {% if data.approval_type == 'conditional' %}
+            <div class="label">Severity Issues:</div>
+            <table>
+                <tr>
+                    <th>S0</th>
+                    <th>S1</th>
+                    <th>S2</th>
+                    <th>S3</th>
+                </tr>
+                <tr>
+                    <td>{{ data.s0 }}</td>
+                    <td>{{ data.s1 }}</td>
+                    <td>{{ data.s2 }}</td>
+                    <td>{{ data.s3 }}</td>
+                </tr>
+            </table>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <div class="label">QA Sign-off:</div>
+            <div>{{ data.qa_signoff.upper() }}</div>
+            {% if data.qa_signoff == 'yes' %}
+            <div>QA Resource: {{ data.qa_approver }}</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <div class="label">Code Review:</div>
+            <div>{{ data.code_review.upper() }}</div>
+            {% if data.code_review == 'pass' %}
+            <div class="label">Approver Name:</div>
+            <div>{{ data.approver_name }}</div>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <div class="label">Code Repository Details:</div>
+            <div>PR URL: {{ data.pr_url }}</div>
+            <div>Final Commit: {{ data.final_commit }}</div>
+        </div>
+
+        <div class="section">
+            <div class="label">CCR/CDR Ticket Details:</div>
+            <div>Redmine URL: {{ data.redmine_url }}</div>
+            <div>Sign-off Type: {{ 'Client Sign-off' if data.signoff_type == 'client' else 'Manager Sign-off' }}</div>
+            {% if data.signoff_type == 'client' %}
+            <div>Client Name: {{ data.client_name }}</div>
+            {% else %}
+            <div>Manager Name: {{ data.manager_name }}</div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+
+</html>
