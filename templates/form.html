@@ -11,7 +11,7 @@
 
 <body>
     <div class="container mt-5">
-        <form id="reportForm" action="/submit" method="POST" enctype="multipart/form-data">
+        <form id="reportForm" action="/submit" method="POST" enctype="multipart/form-data" novalidate>
             <!-- Project Details Card -->
             <div class="card mb-3">
                 <div class="card-header">
@@ -488,6 +488,110 @@
             if (document.getElementById('managerSignoff').checked) {
                 managerName.value = this.value;
             }
+        });
+
+        // Form validation on submit
+        document.getElementById('reportForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form submission first
+
+            // Remove any existing validation styling
+            document.querySelectorAll('.form-control, .form-select, .form-check-input').forEach(input => {
+                input.classList.remove('is-invalid');
+            });
+
+            let isValid = true;
+
+            // Check all required inputs
+            this.querySelectorAll('input[required], select[required]').forEach(input => {
+                if (!input.value.trim()) {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                }
+            });
+
+            // Check radio button groups
+            const radioGroups = new Set();
+            this.querySelectorAll('input[type="radio"][required]').forEach(radio => {
+                radioGroups.add(radio.name);
+            });
+
+            radioGroups.forEach(groupName => {
+                const checkedRadio = document.querySelector(`input[name="${groupName}"]:checked`);
+                if (!checkedRadio) {
+                    const radioButtons = document.querySelectorAll(`input[name="${groupName}"]`);
+                    radioButtons.forEach(radio => {
+                        radio.closest('.form-check').classList.add('is-invalid');
+                    });
+                    isValid = false;
+                }
+            });
+
+            // Check conditional fields
+            if (document.getElementById('projectSelect').value === 'other' &&
+                !document.getElementById('projectInput').value.trim()) {
+                document.getElementById('projectInput').classList.add('is-invalid');
+                isValid = false;
+            }
+
+            if (document.getElementById('codeReviewPass')?.checked &&
+                !document.getElementById('approverName').value.trim()) {
+                document.getElementById('approverName').classList.add('is-invalid');
+                isValid = false;
+            }
+
+            if (document.getElementById('qaSignoffYes')?.checked &&
+                !document.getElementById('qaApprover').value.trim()) {
+                document.getElementById('qaApprover').classList.add('is-invalid');
+                isValid = false;
+            }
+
+            if (document.getElementById('clientSignoff')?.checked &&
+                !document.getElementById('clientName').value.trim()) {
+                document.getElementById('clientName').classList.add('is-invalid');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+
+            if (isValid) {
+                // If valid, submit the form
+                if (event.submitter.formAction.includes('generate_pdf')) {
+                    this.action = '/generate_pdf';
+                } else {
+                    this.action = '/submit';
+                }
+                this.submit();
+            }
+        });
+
+        // Add this CSS to style invalid radio buttons
+        const style = document.createElement('style');
+        style.textContent = `
+            .form-check.is-invalid .form-check-input {
+                border-color: #dc3545;
+            }
+            .form-check.is-invalid .form-check-label {
+                color: #dc3545;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Remove invalid styling when user starts typing/selecting
+        document.querySelectorAll('.form-control, .form-select').forEach(input => {
+            input.addEventListener('input', function () {
+                this.classList.remove('is-invalid');
+            });
+        });
+
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                const radioButtons = document.querySelectorAll(`input[name="${this.name}"]`);
+                radioButtons.forEach(rb => {
+                    rb.closest('.form-check').classList.remove('is-invalid');
+                });
+            });
         });
     </script>
 </body>
